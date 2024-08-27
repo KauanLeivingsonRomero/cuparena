@@ -1,0 +1,6 @@
+2024-08-23 17:48:38.925 [info] Activation> Extension version: 0.94.0
+2024-08-23 17:48:38.925 [info] TemporaryState> Error in initialization: Unable to delete nonexistent file 'vscode-userdata:/c:/Users/kauan/Desktop/cuparena/~/.vscode-root/User/globalStorage/github.vscode-pull-request-github/temp'
+2024-08-23 17:48:39.068 [info] Looking for git repository
+2024-08-23 17:48:39.068 [info] Found 0 repositories during activation
+2024-08-23 17:48:39.068 [info] Git repository found, initializing review manager and pr tree view.
+2024-08-23 17:48:39.070 [info] Registering git provider
