@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyRound, Mail, User } from 'lucide-react-native';
 import { COLORS } from '@/constants/Colors';
@@ -7,21 +7,46 @@ import { Link } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
 
 const schema = z.object({
-  name: z.string().min(2, { message: "O nome precisa de pelo menos 2 caracteres" }),
-  email: z.string().email({ message: "Email inválido" }),
-  password: z.string().min(6, { message: "A senha precisa de pelo menos 6 dígitos" })
+  name: z.string({required_error: "Insira um nome"}).min(2, { message: "O nome precisa de pelo menos 2 caracteres" }),
+  email: z.string({required_error: "Insira um email"}).email({ message: "Email inválido" }),
+  password: z.string({required_error: "Insira uma senha"}).min(6, { message: "A senha precisa de pelo menos 6 dígitos" })
 });
 
 export default function Register() {
-  const { control, handleSubmit, formState: { errors } } = useForm({
+
+  const { control, handleSubmit, formState: { errors } } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema)
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
+  const route = useRouter();
+
+  const [errorMessage, setErrorMessage] = useState<string>("")
+
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/register`, {
+      name: data.name,
+      email: data.email,
+      password: data.password
+    })    
+    .then((res) => {
+      console.log('Success response:', res.data);
+      route.push('/home')
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log('Error response:', error.response.data);
+        setErrorMessage(error.response.data.message)
+      } else if (error.request) {
+        console.log('Error request:', error.request);
+      } else {
+        console.log('Error message:', error.message);
+      }
+    });
+  }
 
   return (
     <View className='flex h-screen bg-off-black'>
@@ -57,7 +82,7 @@ export default function Register() {
             )}
           />
         </View>
-        {errors.name && <Text className='text-red-500'>{String(errors.name.message)}</Text>}
+        {errors.name && <Animated.Text entering={FadeInUp.duration(400)} exiting={FadeInUp.duration(400)} className='text-red-500 pt-2'>{String(errors.name.message)}</Animated.Text>}
 
         <View className='w-3/4 h-12 border-2 border-green rounded-xl text-gray flex justify-start flex-row text-center items-center pl-2 mt-3'>
           <Mail className='text-gray' />
@@ -75,7 +100,7 @@ export default function Register() {
             )}
           />
         </View>
-        {errors.email && <Text className='text-red-500'>{String(errors.email.message)}</Text>}
+        {errors.email && <Animated.Text entering={FadeInUp.duration(400)} exiting={FadeInUp.duration(400)} className='text-red-500 pt-2'>{String(errors.email.message)}</Animated.Text>}
 
         <View className='w-3/4 h-12 border-2 border-green rounded-xl text-gray flex justify-start flex-row text-center items-center pl-2 mt-3'>
           <KeyRound className='text-gray' />
@@ -94,7 +119,8 @@ export default function Register() {
             )}
           />
         </View>
-        {errors.password && <Text className='text-red-500'>{String(errors.password.message)}</Text>}
+        {errors.password && <Animated.Text entering={FadeInUp.duration(400)} exiting={FadeInUp.duration(400)} className='text-red-500 pt-2'>{String(errors.password.message)}</Animated.Text>}
+        {errorMessage && <Animated.Text entering={FadeInUp.duration(200)} className='text-red-500 pt-2'>{errorMessage}</Animated.Text>}
 
         <View className="mt-5 flex w-full justify-center items-center">
           <TouchableOpacity className='w-32 h-11 flex justify-center items-center rounded-xl bg-green' onPress={handleSubmit(onSubmit)}>
