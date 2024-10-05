@@ -8,7 +8,6 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from "axios";
-import { Redirect } from 'expo-router';
 
 const schema = z.object({
   email: z.string({required_error: "Insira seu email"})
@@ -44,6 +43,7 @@ export default function Login(){
         setErrorMessage(error.response.data.message)
       } else if (error.request) {
         console.log('Error request:', error.request);
+        setErrorMessage("Erro interno do servidor code(500)")
       } else {
         console.log('Error message:', error.message);
       }

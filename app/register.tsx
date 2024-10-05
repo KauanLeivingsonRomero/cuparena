@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyRound, Mail, User } from 'lucide-react-native';
 import { COLORS } from '@/constants/Colors';
@@ -24,7 +24,10 @@ export default function Register() {
 
   const route = useRouter();
 
+
   const [errorMessage, setErrorMessage] = useState<string>("")
+
+  
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/register`, {
@@ -42,11 +45,20 @@ export default function Register() {
         setErrorMessage(error.response.data.message)
       } else if (error.request) {
         console.log('Error request:', error.request);
+        setErrorMessage("Erro interno do servidor code(500)")
       } else {
         console.log('Error message:', error.message);
       }
     });
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      if(errorMessage != ""){
+        setErrorMessage("")
+      }
+    },Number(process.env.EXPO_PUBLIC_ERROR_TIMEOUT))    
+  },[onSubmit])
 
   return (
     <View className='flex h-screen bg-off-black'>
