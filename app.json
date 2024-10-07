@@ -9,8 +9,9 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#1c1c1c",
+      "hideExponentText": true
     },
     "ios": {
       "supportsTablet": true
