@@ -10,7 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { response } from '@/types/authResponse';
-import { supabase } from '@/lib/supabase';
 
 const schema = z.object({
   email: z.string({required_error: "Insira seu email"})
@@ -20,15 +19,6 @@ const schema = z.object({
   password: z.string({required_error: "Insira sua senha"})
              .min(6, {message: "Senha muito curta"})
 })
-
-AppState.addEventListener('change', (state) => {
-  if (state === 'active') {
-    supabase.auth.startAutoRefresh()
-  } else {
-    supabase.auth.stopAutoRefresh()
-  }
-})
-
 
 export default function Login(){
   
@@ -40,9 +30,6 @@ export default function Login(){
 
   const route = useRouter()
 
-  // console.log(control._formValues)
-
-
   const onSubmit = async (data: z.infer<typeof schema>) => {
 
     setLoading(true)
@@ -50,17 +37,12 @@ export default function Login(){
     await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/login`, {
       email: data.email,
       password: data.password
-    })    
-    .then( async (res: response) => {
+    }) 
+    .then((res: response) => {
       console.log('Success response:', res.data);
-      route.replace("/(home)")
-      try{
-        await AsyncStorage.setItem("token", res.data.token);
-        await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
-      }catch(error){
-        console.log(error)
-      }
-      
+      route.replace("/(home)")      
+      AsyncStorage.setItem("token", res.data.token);
+      AsyncStorage.setItem("user", JSON.stringify(res.data.user));
     })
     .catch((error) => {
       if (error.response) {
