@@ -10,7 +10,7 @@ npm-debug.*
 *.orig.*
 web-build/
 .env*
-
+android
 # macOS
 .DS_Store
 
@@ -19,4 +19,5 @@ web-build/
 
 expo-env.d.ts
 nativewind-env.d.ts
+declarations.d.ts
 # @end expo-cli

@@ -8,9 +8,9 @@ export default function RootLayout() {
   
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{ headerStyle: { backgroundColor: COLORS.main }, headerTintColor: COLORS.main, animation: "fade"}}>
+      <Stack screenOptions={{ animation: "fade", headerShown: false}}>
         <Stack.Screen name="index" options={{ headerShown: false, animation: 'none' }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false, animation: 'none' }} />
+        <Stack.Screen name="register" options={{ headerShown: false, animation: 'none' }} />
       </Stack>
     </SafeAreaProvider>
   );
