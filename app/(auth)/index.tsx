@@ -38,11 +38,11 @@ export default function Login(){
       email: data.email,
       password: data.password
     }) 
-    .then((res: response) => {
+    .then(async (res: response) => {
       console.log('Success response:', res.data);
       route.replace("/(home)")      
-      AsyncStorage.setItem("token", res.data.token);
-      AsyncStorage.setItem("user", JSON.stringify(res.data.user));
+      await AsyncStorage.setItem("token", res.data.token);
+      await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
     })
     .catch((error) => {
       if (error.response) {
@@ -51,11 +51,11 @@ export default function Login(){
       } else if (error.request) {
         console.log('Error request:', error.request);
         setErrorMessage("Erro interno do servidor code(500)")
-      } else {
-        console.log('Error message:', error.message);
+      }else{
+        console.log("Error:", error)
       }
     })
-    .finally(async () => {
+    .finally(() => {
       setLoading(false)      
     })
     
@@ -105,7 +105,7 @@ export default function Login(){
             )}
           />
         </View>        
-        {errors.email && <Animated.Text entering={FadeInUp.duration(400)} exiting={FadeInUp.duration(400)} className='text-red-500 pt-2'>{String(errors.email.message)}</Animated.Text>}
+        {errors.email ? <Animated.Text entering={FadeInUp.duration(400)} exiting={FadeInUp.duration(400)} className='text-red-500 pt-2'>{String(errors.email.message)}</Animated.Text> : null}
         
         <View className='w-3/4 h-12 border-2 border-green rounded-xl text-gray flex justify-start flex-row text-center items-center pl-2 mt-3'>
           <KeyRound className='text-gray' />
@@ -126,9 +126,9 @@ export default function Login(){
           />
         </View>        
         
-        {errors.password && <Animated.Text entering={FadeInUp.duration(200)} exiting={FadeInUp.duration(200)} className='text-red-500 pt-2'>{String(errors.password.message)}</Animated.Text>}
+        {errors.password ? <Animated.Text entering={FadeInUp.duration(200)} exiting={FadeInUp.duration(200)} className='text-red-500 pt-2'>{String(errors.password.message)}</Animated.Text> : null}
       
-        {errorMessage && <Animated.Text entering={FadeInUp.duration(200)} className='text-red-500 pt-2'>{errorMessage}</Animated.Text>}
+        {errorMessage ? <Animated.Text entering={FadeInUp.duration(200)} className='text-red-500 pt-2'>{errorMessage}</Animated.Text> : null}
     
         <View className="mt-3 flex w-full justify-center items-center">
           <TouchableOpacity className='w-32 h-11 flex justify-center items-center rounded-xl bg-green' onPress={handleSubmit(onSubmit)}>

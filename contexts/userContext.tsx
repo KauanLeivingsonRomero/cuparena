@@ -19,7 +19,7 @@ const UserProvider = (props: {children: ReactNode}): ReactElement => {
   useEffect(() => {
     const loadUser = async () => {
       const storedUser = await AsyncStorage.getItem("user")     
-      // console.log(storedUser) 
+       
       if (storedUser) {
         setUser(JSON.parse(storedUser));
       }

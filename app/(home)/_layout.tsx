@@ -67,9 +67,9 @@ export default function HomeLayout() {
           return (
             <View style={{ alignItems: 'center' }}>
               {icon}
-              {focused && route.name != "moreContent" && (
-                <View style={{ height: 2, backgroundColor: '#46FF6F', width: 20, marginTop: 4 }} />
-              )}
+              {focused && route.name != "moreContent" ? (
+                <View style={{ height: 2, backgroundColor: '#46FF6F', width: 20, marginTop: 4 }}  />
+              ) : null }
             </View>
           );
         },

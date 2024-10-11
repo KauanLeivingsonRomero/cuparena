@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// import { Container } from './styles';
 
 const Profile = () => {
 
@@ -20,8 +19,6 @@ const Profile = () => {
       router.replace("/(auth)")
     })
   }
-
-  // useEffect(() => {clearStorage()},[])
 
   return(
     <SafeAreaView className='flex-1 flex'>
