@@ -35,11 +35,11 @@ export default function Register() {
       email: data.email,
       password: data.password
     })    
-    .then((res: response) => {
+    .then(async (res: response) => {
       console.log('Success response:', res.data);
       route.replace('/(home)')
-      AsyncStorage.setItem("token", res.data.token);
-      AsyncStorage.setItem("user", JSON.stringify(res.data.user));
+      await AsyncStorage.setItem("token", res.data.token);
+      await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
     })
     .catch((error) => {
       if (error.response) {
