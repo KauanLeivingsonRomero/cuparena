@@ -5,7 +5,8 @@ export type response = {
     user: {
       id: number,
       email: string,
-      name: string
+      name: string,
+      profile_picture: string
     }
-  }
+  } 
 }
