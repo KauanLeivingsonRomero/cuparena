@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyRound, Mail, User } from 'lucide-react-native';
 import { COLORS } from '@/constants/Colors';
 import Animated, { FadeInUp } from 'react-native-reanimated';
@@ -25,12 +25,12 @@ export default function Register() {
   });
 
   const route = useRouter();
-
-
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/register`, {
+    setLoading(true)
+    await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/register`, {
       name: data.name,
       email: data.email,
       password: data.password
@@ -51,6 +51,8 @@ export default function Register() {
       } else {
         console.log('Error message:', error.message);
       }
+    }).finally(() => {
+      setLoading(false)
     });
   }
 
@@ -142,7 +144,14 @@ export default function Register() {
 
         <View className="mt-5 flex w-full justify-center items-center">
           <TouchableOpacity className='w-32 h-11 flex justify-center items-center rounded-xl bg-green' onPress={handleSubmit(onSubmit)}>
-            <Text className='text-off-white text-xl'>Cadastrar</Text>
+          {loading ? 
+            <>
+              <ActivityIndicator size="large" color="#fff"/>
+            </> : 
+            <>
+              <Text className='text-off-white text-xl'>Cadastrar</Text>
+            </>
+            }
           </TouchableOpacity>
           <Text className='text-off-white mt-1'>Já possui conta? <Link className='text-green' href="/">Entrar</Link></Text>
         </View>

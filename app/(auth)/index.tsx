@@ -33,8 +33,7 @@ export default function Login(){
   const onSubmit = async (data: z.infer<typeof schema>) => {
 
     setLoading(true)
-
-    await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/login`, {
+    await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/login`, {
       email: data.email,
       password: data.password
     }) 
