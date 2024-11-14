@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyRound, Mail, User } from 'lucide-react-native';
 import { COLORS } from '@/constants/Colors';
 import Animated, { FadeInUp } from 'react-native-reanimated';
@@ -7,10 +7,10 @@ import { Link } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { response } from '@/types/authResponse';
+import api from '@/lib/axios';
 
 const schema = z.object({
   name: z.string({required_error: "Insira um nome"}).min(2, { message: "O nome precisa de pelo menos 2 caracteres" }),
@@ -25,21 +25,21 @@ export default function Register() {
   });
 
   const route = useRouter();
-
-
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/register`, {
+    setLoading(true)
+    await api.post(`/auth/register`, {
       name: data.name,
       email: data.email,
       password: data.password
     })    
-    .then((res: response) => {
+    .then(async (res: response) => {
       console.log('Success response:', res.data);
       route.replace('/(home)')
-      AsyncStorage.setItem("token", res.data.token);
-      AsyncStorage.setItem("user", JSON.stringify(res.data.user));
+      await AsyncStorage.setItem("token", res.data.token);
+      await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
     })
     .catch((error) => {
       if (error.response) {
@@ -51,6 +51,8 @@ export default function Register() {
       } else {
         console.log('Error message:', error.message);
       }
+    }).finally(() => {
+      setLoading(false)
     });
   }
 
@@ -142,7 +144,14 @@ export default function Register() {
 
         <View className="mt-5 flex w-full justify-center items-center">
           <TouchableOpacity className='w-32 h-11 flex justify-center items-center rounded-xl bg-green' onPress={handleSubmit(onSubmit)}>
-            <Text className='text-off-white text-xl'>Cadastrar</Text>
+          {loading ? 
+            <>
+              <ActivityIndicator size="large" color="#fff"/>
+            </> : 
+            <>
+              <Text className='text-off-white text-xl'>Cadastrar</Text>
+            </>
+            }
           </TouchableOpacity>
           <Text className='text-off-white mt-1'>Já possui conta? <Link className='text-green' href="/">Entrar</Link></Text>
         </View>

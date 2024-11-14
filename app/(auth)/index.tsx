@@ -7,9 +7,9 @@ import { Link, useRouter } from 'expo-router';
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { response } from '@/types/authResponse';
+import api from '@/lib/axios';
 
 const schema = z.object({
   email: z.string({required_error: "Insira seu email"})
@@ -33,18 +33,17 @@ export default function Login(){
   const onSubmit = async (data: z.infer<typeof schema>) => {
 
     setLoading(true)
-
-    await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/login`, {
+    await api.post(`/auth/login`, {
       email: data.email,
       password: data.password
     }) 
-    .then((res: response) => {
+    .then(async (res: response) => {
       console.log('Success response:', res.data);
       route.replace("/(home)")      
-      AsyncStorage.setItem("token", res.data.token);
-      AsyncStorage.setItem("user", JSON.stringify(res.data.user));
+      await AsyncStorage.setItem("token", res.data.token);
+      await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
     })
-    .catch((error) => {
+    .catch((error: { response: { data: { message: React.SetStateAction<string>; }; }; request: any; message: any; }) => {
       if (error.response) {
         console.log('Error response:', error.response.data);
         setErrorMessage(error.response.data.message)

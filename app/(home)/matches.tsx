@@ -8,7 +8,7 @@ const Settings = () => {
   return(
     <SafeAreaView className='flex-1 flex'>
       <ScrollView>
-        <Text>Settings</Text>     
+        <Text>Matches</Text>     
       </ScrollView>
     </SafeAreaView>
   );
