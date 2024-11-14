@@ -1,7 +1,7 @@
-
+import api from '@/lib/axios';
 import type { User, UserContextType } from '@/types/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, useContext, useEffect, useState, type ReactElement, type ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, type ReactElement, type ReactNode } from 'react';
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -18,21 +18,20 @@ const UserProvider = (props: {children: ReactNode}): ReactElement => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadUser = async () => {
-      const storedUser = await AsyncStorage.getItem("user")
-      const token = await AsyncStorage.getItem("token")
-         
-       
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-        setToken(token) 
-      }
-    }
-    // console.log(token)
-    // console.log(user)
-    loadUser() 
-  },[]) 
+  const loadUser = useCallback(async () => {
+    await api.get('/me')
+      .then((response: any) => {
+        setUser(response.data.user);
+        // console.log(response.data.user); 
+      })
+      .catch((error) => {
+        console.error("Error loading user:", error);
+      });
+  }, []);
+
+  useEffect(() => {    
+    loadUser();
+  }, [loadUser]);
 
   useEffect(() => {
     if (user) {
@@ -46,7 +45,7 @@ const UserProvider = (props: {children: ReactNode}): ReactElement => {
     setUser(null);
   };
 
-  return <UserContext.Provider {...props} value={{ user, setUser, logout, token, setToken }}/>;
+  return <UserContext.Provider {...props} value={{ user, setUser, logout, token, setToken, loadUser }} />;
 }
 
-export  {UserContext,UserProvider } ;
+export { UserContext, UserProvider };

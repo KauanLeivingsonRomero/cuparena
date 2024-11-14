@@ -7,10 +7,10 @@ import { Link } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { response } from '@/types/authResponse';
+import api from '@/lib/axios';
 
 const schema = z.object({
   name: z.string({required_error: "Insira um nome"}).min(2, { message: "O nome precisa de pelo menos 2 caracteres" }),
@@ -30,7 +30,7 @@ export default function Register() {
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     setLoading(true)
-    await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/auth/register`, {
+    await api.post(`/auth/register`, {
       name: data.name,
       email: data.email,
       password: data.password
