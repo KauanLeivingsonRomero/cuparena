@@ -5,6 +5,8 @@ export type User = {
   user_name: string,
   user_email: string,
   user_profilePicture: string,
+  user_role: string,
+  team_id: number | null,
   token: string,
   created_at: number
 }
@@ -15,4 +17,5 @@ export type UserContextType = {
   logout: () => void;
   token: string | null;
   setToken: Dispatch<SetStateAction<string | null>>
+  loadUser: () => void;
 }
