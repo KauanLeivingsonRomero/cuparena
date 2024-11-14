@@ -24,7 +24,7 @@ const UserProvider = (props: {children: ReactNode}): ReactElement => {
         setUser(response.data.user);
         // console.log(response.data.user); 
       })
-      .catch((error) => {
+      .catch((error) => {        
         console.error("Error loading user:", error);
       });
   }, []);

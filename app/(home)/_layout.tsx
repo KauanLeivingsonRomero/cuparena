@@ -29,7 +29,7 @@ export default function HomeLayout() {
   return ( 
     <>  
       <StatusBar backgroundColor={"#1C1C1C"}/>
-      <Tabs screenOptions={({ route }) => ({      
+      <Tabs initialRouteName='profile' screenOptions={({ route }) => ({      
         tabBarIcon: ({ focused }) => {
           let icon;
           let IconComponent;
@@ -39,7 +39,7 @@ export default function HomeLayout() {
               IconComponent = Home;
               icon = <IconComponent color={'#fff'} />;
               break;
-            case 'settings':
+            case 'matches':
               IconComponent = CalendarCheck2;
               icon = <IconComponent color={'#fff'} />;
               break;
@@ -86,7 +86,7 @@ export default function HomeLayout() {
         tabBarShowLabel: false
       })}>
         <Tabs.Screen name="index" options={{ headerShown: false }} />
-        <Tabs.Screen name="settings" options={{ headerShown: false }} />
+        <Tabs.Screen name="matches" options={{ headerShown: false }} />
         <Tabs.Screen name="moreContent" options={{ headerShown: false }} />
         <Tabs.Screen name="team" options={{ headerShown: false }} />
         <Tabs.Screen name="profile" options={{ headerShown: false }} />
